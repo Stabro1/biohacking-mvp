@@ -8,9 +8,14 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Biohacking Daily</h1>
-    <p class="tagline">Twoja codzienna lista nawyków + streaki.</p>
+  <header class="header">
+    <div>
+      <h1>Biohacking Daily</h1>
+      <p class="tagline">Twoja codzienna lista nawyków + streaki.</p>
+    </div>
+    <div class="streak-top">
+      <span id="streak-count">0</span> dni z rzędu
+    </div>
   </header>
 
   <main>
@@ -20,10 +25,22 @@
       <button id="add-habit">+ Dodaj nawyk</button>
     </section>
 
-    <section class="card">
-      <h2>Streak</h2>
-      <div class="streak">
-        <span id="streak-count">0</span> dni z rzędu
+
+    <section class="card features">
+      <h2>Funkcje</h2>
+      <div class="feature-grid">
+        <div class="feature-col">
+          <div class="feature-item">📅 Kalendarz nawyków</div>
+          <div class="feature-item">🎯 Cel tygodniowy</div>
+          <div class="feature-item">⏱️ Focus (Pomodoro)</div>
+          <div class="feature-item">📈 Statystyki streak</div>
+        </div>
+        <div class="feature-col">
+          <div class="feature-item">🔔 Przypomnienia (web)</div>
+          <div class="feature-item">🧾 Eksport PDF</div>
+          <div class="feature-item">📌 Priorytety dnia</div>
+          <div class="feature-item">🧠 Notatki dzienne</div>
+        </div>
       </div>
     </section>
 
