@@ -1,6 +1,13 @@
 const list = document.getElementById('habit-list');
 const addBtn = document.getElementById('add-habit');
 const streakEl = document.getElementById('streak-count');
+const subscribeBtn = document.getElementById('subscribe-btn');
+const upsellBtn = document.getElementById('upsell-btn');
+
+const PRICING = {
+  monthlyUrl: '',
+  upsellUrl: ''
+};
 
 const todayKey = new Date().toISOString().slice(0,10);
 const state = JSON.parse(localStorage.getItem('bh_state') || '{}');
@@ -51,5 +58,16 @@ addBtn.addEventListener('click', ()=>{
   state.habits.push({ id: crypto.randomUUID(), name, done:false });
   save(); render();
 });
+
+function goTo(url){
+  if (!url){
+    alert('Brak linku płatności. Właściciel musi dodać link Stripe/Gumroad.');
+    return;
+  }
+  window.location.href = url;
+}
+
+subscribeBtn?.addEventListener('click', () => goTo(PRICING.monthlyUrl));
+upsellBtn?.addEventListener('click', () => goTo(PRICING.upsellUrl));
 
 render();
