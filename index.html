@@ -26,22 +26,52 @@
     </section>
 
 
-    <section class="card features">
-      <h2>Funkcje</h2>
-      <div class="feature-grid">
-        <div class="feature-col">
-          <div class="feature-item">📅 Kalendarz nawyków</div>
-          <div class="feature-item">🎯 Cel tygodniowy</div>
-          <div class="feature-item">⏱️ Focus (Pomodoro)</div>
-          <div class="feature-item">📈 Statystyki streak</div>
-        </div>
-        <div class="feature-col">
-          <div class="feature-item">🔔 Przypomnienia (web)</div>
-          <div class="feature-item">🧾 Eksport PDF</div>
-          <div class="feature-item">📌 Priorytety dnia</div>
-          <div class="feature-item">🧠 Notatki dzienne</div>
+    <section class="card">
+      <h2>Przypomnienia</h2>
+      <div class="row">
+        <button id="notify-btn">Włącz powiadomienia</button>
+        <input id="notify-time" type="time" value="20:00" />
+        <button id="notify-set">Ustaw przypomnienie</button>
+      </div>
+      <small class="note">Przypomnienie działa w tej przeglądarce.</small>
+    </section>
+
+    <section class="card">
+      <h2>Kalendarz nawyków</h2>
+      <div class="row">
+        <button id="cal-week">Tydzień</button>
+        <button id="cal-month">Miesiąc</button>
+      </div>
+      <div id="calendar" class="calendar"></div>
+    </section>
+
+    <section class="card">
+      <h2>Cel tygodniowy</h2>
+      <div class="row">
+        <span id="weekly-progress">0/7</span>
+        <label class="inline">Cel:
+          <input id="weekly-goal" type="number" min="1" max="7" value="5" />
+        </label>
+      </div>
+      <div class="progress"><div id="weekly-bar"></div></div>
+    </section>
+
+    <section class="card">
+      <h2>Focus (25/5)</h2>
+      <div class="focus">
+        <div id="focus-time">25:00</div>
+        <div class="row">
+          <button id="focus-start">Start</button>
+          <button id="focus-pause">Pauza</button>
+          <button id="focus-reset">Reset</button>
         </div>
       </div>
+    </section>
+
+    <section class="card">
+      <h2>Eksport</h2>
+      <button id="export-pdf">Eksport do PDF</button>
+      <small class="note">Otworzy widok do wydruku (PDF).</small>
     </section>
 
     <section class="card affiliate">
