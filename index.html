@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Biohacking Daily — MVP</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Biohacking Daily</h1>
+    <p class="tagline">Twoja codzienna lista nawyków + streaki.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Dzisiejsze nawyki</h2>
+      <ul id="habit-list"></ul>
+      <button id="add-habit">+ Dodaj nawyk</button>
+    </section>
+
+    <section class="card">
+      <h2>Streak</h2>
+      <div class="streak">
+        <span id="streak-count">0</span> dni z rzędu
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Plan Premium (wkrótce)</h2>
+      <ul>
+        <li>Gotowe protokoły (sen, energia, fokus)</li>
+        <li>Przypomnienia i statystyki</li>
+        <li>Eksport PDF</li>
+      </ul>
+      <button disabled>Subskrypcja — wkrótce</button>
+    </section>
+
+    <section class="card ad-slot">
+      <h2>Reklama</h2>
+      <div class="ad-placeholder">Miejsce na reklamę (AdMob/Adsense)</div>
+    </section>
+  </main>
+
+  <footer>
+    <small>© 2026 Biohacking Daily — MVP</small>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
