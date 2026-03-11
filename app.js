@@ -19,6 +19,17 @@ const exportBtn = document.getElementById('export-pdf');
 const todayKey = new Date().toISOString().slice(0,10);
 const state = JSON.parse(localStorage.getItem('bh_state') || '{}');
 
+const habitNameMap = {
+  'Daylight 10 min': 'Światło dzienne 10 min',
+  'Water + electrolytes': 'Woda + elektrolity',
+  'Movement 5–10 min': 'Ruch 5–10 min',
+};
+
+function migrateHabits(){
+  if (!state.habits) return;
+  state.habits = state.habits.map(h => ({ ...h, name: habitNameMap[h.name] || h.name }));
+}
+
 if (!state.habits) state.habits = [
   { id: crypto.randomUUID(), name: 'Światło dzienne 10 min', done: false },
   { id: crypto.randomUUID(), name: 'Woda + elektrolity', done: false },
@@ -26,6 +37,8 @@ if (!state.habits) state.habits = [
 ];
 if (!state.history) state.history = {};
 if (!state.weeklyGoal) state.weeklyGoal = 5;
+
+migrateHabits();
 
 if (state.lastDate !== todayKey) {
   state.habits = state.habits.map(h => ({...h, done:false}));
