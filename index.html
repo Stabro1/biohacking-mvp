@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -12,45 +12,45 @@
   <header class="header">
     <div>
       <h1>Biohacking Daily</h1>
-      <p class="tagline">Twoja codzienna lista nawyków + serie.</p>
+      <p class="tagline" id="tagline">Your daily habit checklist + streaks.</p>
     </div>
     <div class="streak-top">
-      <span id="streak-count">0</span> dni z rzędu
+      <span id="streak-count">0</span> <span id="streak-label">days in a row</span>
     </div>
   </header>
 
   <main>
     <section class="card">
-      <h2>Dzisiejsze nawyki</h2>
+      <h2 id="h2-today">Today’s habits</h2>
       <ul id="habit-list"></ul>
-      <button id="add-habit">+ Dodaj nawyk</button>
+      <button id="add-habit">+ Add habit</button>
     </section>
 
 
     <section class="card">
-      <h2>Przypomnienia</h2>
+      <h2 id="h2-reminders">Reminders</h2>
       <div class="row">
-        <button id="notify-btn">Włącz powiadomienia</button>
+        <button id="notify-btn">Enable notifications</button>
         <input id="notify-time" type="time" value="20:00" />
-        <button id="notify-set">Ustaw przypomnienie</button>
+        <button id="notify-set">Set reminder</button>
       </div>
-      <small class="note">Przypomnienia działają w tej przeglądarce.</small>
+      <small class="note" id="note-reminder">Reminder works in this browser.</small>
     </section>
 
     <section class="card">
-      <h2>Kalendarz nawyków</h2>
+      <h2 id="h2-calendar">Habit calendar</h2>
       <div class="row">
-        <button id="cal-week">Tydzień</button>
-        <button id="cal-month">Miesiąc</button>
+        <button id="cal-week">Week</button>
+        <button id="cal-month">Month</button>
       </div>
       <div id="calendar" class="calendar"></div>
     </section>
 
     <section class="card">
-      <h2>Cel tygodniowy</h2>
+      <h2 id="h2-weekly">Weekly goal</h2>
       <div class="row">
         <span id="weekly-progress">0/7</span>
-        <label class="inline">Cel:
+        <label class="inline" id="weekly-label">Goal:
           <input id="weekly-goal" type="number" min="1" max="7" value="5" />
         </label>
       </div>
@@ -58,69 +58,69 @@
     </section>
 
     <section class="card">
-      <h2>Skupienie (25/5)</h2>
+      <h2 id="h2-focus">Focus (25/5)</h2>
       <div class="focus">
         <div id="focus-time">25:00</div>
         <div class="row">
           <button id="focus-start">Start</button>
-          <button id="focus-pause">Pauza</button>
+          <button id="focus-pause">Pause</button>
           <button id="focus-reset">Reset</button>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <h2>Eksport</h2>
-      <button id="export-pdf">Eksportuj do PDF</button>
-      <small class="note">Otwiera widok do druku (PDF).</small>
+      <h2 id="h2-export">Export</h2>
+      <button id="export-pdf">Export to PDF</button>
+      <small class="note" id="note-export">Opens a print view (PDF).</small>
     </section>
 
     <section class="card affiliate">
-      <h2>Polecane produkty</h2>
+      <h2 id="h2-featured">Featured products</h2>
       <ul class="affiliate-list">
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Flexomore</strong>
-              <p>Wieloskładnikowy suplement wspierający stawy i kości.</p>
+              <p>Multi-ingredient supplement supporting joint and bone health.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/s8ynht8n" target="_blank" rel="noopener">Dowiedz się więcej</a>
+            <a class="affiliate-link" href="https://nplink.net/s8ynht8n" target="_blank" rel="noopener">Learn more</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>EnduNAD</strong>
-              <p>Zaawansowany suplement wspierający naturalną produkcję NAD+ i zdrowie komórkowe.</p>
+              <p>Advanced supplement supporting natural NAD+ production and cellular health.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/msjj5khr" target="_blank" rel="noopener">Dowiedz się więcej</a>
+            <a class="affiliate-link" href="https://nplink.net/msjj5khr" target="_blank" rel="noopener">Learn more</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Brain Actives</strong>
-              <p>Nowoczesne wsparcie mózgu przy zwiększonym wysiłku umysłowym i fizycznym.</p>
+              <p>Modern brain support for increased mental and physical effort.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/6s68012h" target="_blank" rel="noopener">Dowiedz się więcej</a>
+            <a class="affiliate-link" href="https://nplink.net/6s68012h" target="_blank" rel="noopener">Learn more</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Femin Plus</strong>
-              <p>Produkt wspierający libido i równowagę hormonalną u kobiet.</p>
+              <p>Product supporting libido and hormonal balance in women.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/e1in365a" target="_blank" rel="noopener">Dowiedz się więcej</a>
+            <a class="affiliate-link" href="https://nplink.net/e1in365a" target="_blank" rel="noopener">Learn more</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Collagen Select</strong>
-              <p>Suplement z hydrolizatem kolagenu VERISOL® wspierający jędrną, elastyczną skórę.</p>
+              <p>VERISOL® collagen hydrolysate supplement supporting firm, elastic skin.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/z0yh7wts" target="_blank" rel="noopener">Dowiedz się więcej</a>
+            <a class="affiliate-link" href="https://nplink.net/z0yh7wts" target="_blank" rel="noopener">Learn more</a>
           </div>
         </li>
       </ul>

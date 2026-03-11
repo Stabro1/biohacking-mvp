@@ -19,25 +19,145 @@ const exportBtn = document.getElementById('export-pdf');
 const todayKey = new Date().toISOString().slice(0,10);
 const state = JSON.parse(localStorage.getItem('bh_state') || '{}');
 
-const habitNameMap = {
-  'Daylight 10 min': 'Światło dzienne 10 min',
-  'Water + electrolytes': 'Woda + elektrolity',
-  'Movement 5–10 min': 'Ruch 5–10 min',
+const isPL = location.hostname.includes('biohacking-mvp');
+const i18n = {
+  en: {
+    tagline: 'Your daily habit checklist + streaks.',
+    streak: 'days in a row',
+    h2Today: 'Today’s habits',
+    addHabit: '+ Add habit',
+    h2Reminders: 'Reminders',
+    notifyBtn: 'Enable notifications',
+    notifySet: 'Set reminder',
+    noteReminder: 'Reminder works in this browser.',
+    h2Calendar: 'Habit calendar',
+    calWeek: 'Week',
+    calMonth: 'Month',
+    h2Weekly: 'Weekly goal',
+    weeklyLabel: 'Goal:',
+    h2Focus: 'Focus (25/5)',
+    focusPause: 'Pause',
+    h2Export: 'Export',
+    exportPdf: 'Export to PDF',
+    noteExport: 'Opens a print view (PDF).',
+    h2Featured: 'Featured products',
+    learnMore: 'Learn more',
+    products: {
+      flexomore: 'Multi-ingredient supplement supporting joint and bone health.',
+      endunad: 'Advanced supplement supporting natural NAD+ production and cellular health.',
+      brain: 'Modern brain support for increased mental and physical effort.',
+      femin: 'Product supporting libido and hormonal balance in women.',
+      collagen: 'VERISOL® collagen hydrolysate supplement supporting firm, elastic skin.'
+    },
+    habits: ['Daylight 10 min', 'Water + electrolytes', 'Movement 5–10 min'],
+    promptHabit: 'Habit name:',
+    notifUnsupported: 'Your browser does not support notifications.',
+    notifDenied: 'Notification permission not granted.',
+    notifTitle: 'Biohacking Daily',
+    notifBody: 'Time for your habits ✨',
+    alertReminder: (t)=>`Reminder set for ${t}`,
+    focusTitle: 'Biohacking Focus',
+    focusBreak: '5 min break',
+    focusStart: 'Start 25 min focus',
+    reportTitle: 'Biohacking Daily — report',
+    reportToday: (d)=>`Today’s habits (${d})`,
+    reportStreak: (n)=>`Streak: ${n} days`
+  },
+  pl: {
+    tagline: 'Twoja codzienna lista nawyków + serie.',
+    streak: 'dni z rzędu',
+    h2Today: 'Dzisiejsze nawyki',
+    addHabit: '+ Dodaj nawyk',
+    h2Reminders: 'Przypomnienia',
+    notifyBtn: 'Włącz powiadomienia',
+    notifySet: 'Ustaw przypomnienie',
+    noteReminder: 'Przypomnienia działają w tej przeglądarce.',
+    h2Calendar: 'Kalendarz nawyków',
+    calWeek: 'Tydzień',
+    calMonth: 'Miesiąc',
+    h2Weekly: 'Cel tygodniowy',
+    weeklyLabel: 'Cel:',
+    h2Focus: 'Skupienie (25/5)',
+    focusPause: 'Pauza',
+    h2Export: 'Eksport',
+    exportPdf: 'Eksportuj do PDF',
+    noteExport: 'Otwiera widok do druku (PDF).',
+    h2Featured: 'Polecane produkty',
+    learnMore: 'Dowiedz się więcej',
+    products: {
+      flexomore: 'Wieloskładnikowy suplement wspierający stawy i kości.',
+      endunad: 'Zaawansowany suplement wspierający naturalną produkcję NAD+ i zdrowie komórkowe.',
+      brain: 'Nowoczesne wsparcie mózgu przy zwiększonym wysiłku umysłowym i fizycznym.',
+      femin: 'Produkt wspierający libido i równowagę hormonalną u kobiet.',
+      collagen: 'Suplement z hydrolizatem kolagenu VERISOL® wspierający jędrną, elastyczną skórę.'
+    },
+    habits: ['Światło dzienne 10 min', 'Woda + elektrolity', 'Ruch 5–10 min'],
+    promptHabit: 'Nazwa nawyku:',
+    notifUnsupported: 'Twoja przeglądarka nie obsługuje powiadomień.',
+    notifDenied: 'Nie przyznano zgody na powiadomienia.',
+    notifTitle: 'Biohacking Daily',
+    notifBody: 'Czas na Twoje nawyki ✨',
+    alertReminder: (t)=>`Przypomnienie ustawione na ${t}`,
+    focusTitle: 'Biohacking Skupienie',
+    focusBreak: '5 min przerwy',
+    focusStart: 'Start 25 min skupienia',
+    reportTitle: 'Biohacking Daily — raport',
+    reportToday: (d)=>`Dzisiejsze nawyki (${d})`,
+    reportStreak: (n)=>`Seria: ${n} dni`
+  }
 };
+
+const lang = isPL ? i18n.pl : i18n.en;
+
+function applyLocale(){
+  document.documentElement.lang = isPL ? 'pl' : 'en';
+  document.getElementById('tagline').textContent = lang.tagline;
+  document.getElementById('streak-label').textContent = lang.streak;
+  document.getElementById('h2-today').textContent = lang.h2Today;
+  document.getElementById('add-habit').textContent = lang.addHabit;
+  document.getElementById('h2-reminders').textContent = lang.h2Reminders;
+  document.getElementById('notify-btn').textContent = lang.notifyBtn;
+  document.getElementById('notify-set').textContent = lang.notifySet;
+  document.getElementById('note-reminder').textContent = lang.noteReminder;
+  document.getElementById('h2-calendar').textContent = lang.h2Calendar;
+  document.getElementById('cal-week').textContent = lang.calWeek;
+  document.getElementById('cal-month').textContent = lang.calMonth;
+  document.getElementById('h2-weekly').textContent = lang.h2Weekly;
+  document.getElementById('weekly-label').childNodes[0].nodeValue = lang.weeklyLabel;
+  document.getElementById('h2-focus').textContent = lang.h2Focus;
+  document.getElementById('focus-pause').textContent = lang.focusPause;
+  document.getElementById('h2-export').textContent = lang.h2Export;
+  document.getElementById('export-pdf').textContent = lang.exportPdf;
+  document.getElementById('note-export').textContent = lang.noteExport;
+  document.getElementById('h2-featured').textContent = lang.h2Featured;
+  document.querySelectorAll('.affiliate-link').forEach(a=>a.textContent = lang.learnMore);
+  const descs = document.querySelectorAll('.affiliate-text p');
+  if (descs[0]) descs[0].textContent = lang.products.flexomore;
+  if (descs[1]) descs[1].textContent = lang.products.endunad;
+  if (descs[2]) descs[2].textContent = lang.products.brain;
+  if (descs[3]) descs[3].textContent = lang.products.femin;
+  if (descs[4]) descs[4].textContent = lang.products.collagen;
+}
 
 function migrateHabits(){
   if (!state.habits) return;
-  state.habits = state.habits.map(h => ({ ...h, name: habitNameMap[h.name] || h.name }));
+  const mapTo = isPL ? {
+    'Daylight 10 min': 'Światło dzienne 10 min',
+    'Water + electrolytes': 'Woda + elektrolity',
+    'Movement 5–10 min': 'Ruch 5–10 min',
+  } : {
+    'Światło dzienne 10 min': 'Daylight 10 min',
+    'Woda + elektrolity': 'Water + electrolytes',
+    'Ruch 5–10 min': 'Movement 5–10 min',
+  };
+  state.habits = state.habits.map(h => ({ ...h, name: mapTo[h.name] || h.name }));
 }
 
-if (!state.habits) state.habits = [
-  { id: crypto.randomUUID(), name: 'Światło dzienne 10 min', done: false },
-  { id: crypto.randomUUID(), name: 'Woda + elektrolity', done: false },
-  { id: crypto.randomUUID(), name: 'Ruch 5–10 min', done: false },
-];
+if (!state.habits) state.habits = lang.habits.map(name => ({ id: crypto.randomUUID(), name, done: false }));
 if (!state.history) state.history = {};
 if (!state.weeklyGoal) state.weeklyGoal = 5;
 
+applyLocale();
 migrateHabits();
 
 if (state.lastDate !== todayKey) {
@@ -84,7 +204,7 @@ function updateStreak(){
 }
 
 addBtn.addEventListener('click', ()=>{
-  const name = prompt('Nazwa nawyku:');
+  const name = prompt(lang.promptHabit);
   if (!name) return;
   state.habits.push({ id: crypto.randomUUID(), name, done:false });
   save(); render();
@@ -92,9 +212,9 @@ addBtn.addEventListener('click', ()=>{
 
 // Reminders
 notifyBtn?.addEventListener('click', async () => {
-  if (!('Notification' in window)) return alert('Twoja przeglądarka nie obsługuje powiadomień.');
+  if (!('Notification' in window)) return alert(lang.notifUnsupported);
   const perm = await Notification.requestPermission();
-  if (perm !== 'granted') alert('Nie przyznano zgody na powiadomienia.');
+  if (perm !== 'granted') alert(lang.notifDenied);
 });
 
 notifySet?.addEventListener('click', () => {
@@ -107,10 +227,10 @@ notifySet?.addEventListener('click', () => {
   const delay = target - now;
   setTimeout(()=>{
     if (Notification.permission === 'granted'){
-      new Notification('Biohacking Daily', { body: 'Czas na Twoje nawyki ✨' });
+      new Notification(lang.notifTitle, { body: lang.notifBody });
     }
   }, delay);
-  alert(`Przypomnienie ustawione na ${time}`);
+  alert(lang.alertReminder(time));
 });
 
 // Calendar
@@ -167,7 +287,7 @@ function tick(){
     onBreak = !onBreak;
     focusSeconds = (onBreak ? 5 : 25) * 60;
     if (Notification.permission === 'granted'){
-      new Notification('Biohacking Skupienie', { body: onBreak ? '5 min przerwy' : 'Start 25 min skupienia' });
+      new Notification(lang.focusTitle, { body: onBreak ? lang.focusBreak : lang.focusStart });
     }
   }
   renderFocus();
@@ -191,10 +311,10 @@ exportBtn?.addEventListener('click', ()=>{
   const w = window.open('', '_blank');
   const listHtml = state.habits.map(h=>`<li>${h.done?'✅':'⬜'} ${h.name}</li>`).join('');
   w.document.write(`<!doctype html><html><head><title>Biohacking Daily</title></head><body>
-  <h1>Biohacking Daily — raport</h1>
-  <h2>Dzisiejsze nawyki (${todayKey})</h2>
+  <h1>${lang.reportTitle}</h1>
+  <h2>${lang.reportToday(todayKey)}</h2>
   <ul>${listHtml}</ul>
-  <p>Seria: ${state.streak||0} dni</p>
+  <p>${lang.reportStreak(state.streak||0)}</p>
   </body></html>`);
   w.document.close();
   w.focus();
