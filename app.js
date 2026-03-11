@@ -20,9 +20,9 @@ const todayKey = new Date().toISOString().slice(0,10);
 const state = JSON.parse(localStorage.getItem('bh_state') || '{}');
 
 if (!state.habits) state.habits = [
-  { id: crypto.randomUUID(), name: 'Daylight 10 min', done: false },
-  { id: crypto.randomUUID(), name: 'Water + electrolytes', done: false },
-  { id: crypto.randomUUID(), name: 'Movement 5–10 min', done: false },
+  { id: crypto.randomUUID(), name: 'Światło dzienne 10 min', done: false },
+  { id: crypto.randomUUID(), name: 'Woda + elektrolity', done: false },
+  { id: crypto.randomUUID(), name: 'Ruch 5–10 min', done: false },
 ];
 if (!state.history) state.history = {};
 if (!state.weeklyGoal) state.weeklyGoal = 5;
@@ -71,7 +71,7 @@ function updateStreak(){
 }
 
 addBtn.addEventListener('click', ()=>{
-  const name = prompt('Habit name:');
+  const name = prompt('Nazwa nawyku:');
   if (!name) return;
   state.habits.push({ id: crypto.randomUUID(), name, done:false });
   save(); render();
@@ -79,9 +79,9 @@ addBtn.addEventListener('click', ()=>{
 
 // Reminders
 notifyBtn?.addEventListener('click', async () => {
-  if (!('Notification' in window)) return alert('Your browser does not support notifications.');
+  if (!('Notification' in window)) return alert('Twoja przeglądarka nie obsługuje powiadomień.');
   const perm = await Notification.requestPermission();
-  if (perm !== 'granted') alert('Notification permission not granted.');
+  if (perm !== 'granted') alert('Nie przyznano zgody na powiadomienia.');
 });
 
 notifySet?.addEventListener('click', () => {
@@ -94,10 +94,10 @@ notifySet?.addEventListener('click', () => {
   const delay = target - now;
   setTimeout(()=>{
     if (Notification.permission === 'granted'){
-      new Notification('Biohacking Daily', { body: 'Time for your habits ✨' });
+      new Notification('Biohacking Daily', { body: 'Czas na Twoje nawyki ✨' });
     }
   }, delay);
-  alert(`Reminder set for ${time}`);
+  alert(`Przypomnienie ustawione na ${time}`);
 });
 
 // Calendar
@@ -154,7 +154,7 @@ function tick(){
     onBreak = !onBreak;
     focusSeconds = (onBreak ? 5 : 25) * 60;
     if (Notification.permission === 'granted'){
-      new Notification('Biohacking Focus', { body: onBreak ? '5 min break' : 'Start 25 min focus' });
+      new Notification('Biohacking Skupienie', { body: onBreak ? '5 min przerwy' : 'Start 25 min skupienia' });
     }
   }
   renderFocus();
@@ -178,10 +178,10 @@ exportBtn?.addEventListener('click', ()=>{
   const w = window.open('', '_blank');
   const listHtml = state.habits.map(h=>`<li>${h.done?'✅':'⬜'} ${h.name}</li>`).join('');
   w.document.write(`<!doctype html><html><head><title>Biohacking Daily</title></head><body>
-  <h1>Biohacking Daily — report</h1>
-  <h2>Today’s habits (${todayKey})</h2>
+  <h1>Biohacking Daily — raport</h1>
+  <h2>Dzisiejsze nawyki (${todayKey})</h2>
   <ul>${listHtml}</ul>
-  <p>Streak: ${state.streak||0} days</p>
+  <p>Seria: ${state.streak||0} dni</p>
   </body></html>`);
   w.document.close();
   w.focus();

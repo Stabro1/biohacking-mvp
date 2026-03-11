@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -12,45 +12,45 @@
   <header class="header">
     <div>
       <h1>Biohacking Daily</h1>
-      <p class="tagline">Your daily habit checklist + streaks.</p>
+      <p class="tagline">Twoja codzienna lista nawyków + serie.</p>
     </div>
     <div class="streak-top">
-      <span id="streak-count">0</span> days in a row
+      <span id="streak-count">0</span> dni z rzędu
     </div>
   </header>
 
   <main>
     <section class="card">
-      <h2>Today’s habits</h2>
+      <h2>Dzisiejsze nawyki</h2>
       <ul id="habit-list"></ul>
-      <button id="add-habit">+ Add habit</button>
+      <button id="add-habit">+ Dodaj nawyk</button>
     </section>
 
 
     <section class="card">
-      <h2>Reminders</h2>
+      <h2>Przypomnienia</h2>
       <div class="row">
-        <button id="notify-btn">Enable notifications</button>
+        <button id="notify-btn">Włącz powiadomienia</button>
         <input id="notify-time" type="time" value="20:00" />
-        <button id="notify-set">Set reminder</button>
+        <button id="notify-set">Ustaw przypomnienie</button>
       </div>
-      <small class="note">Reminder works in this browser.</small>
+      <small class="note">Przypomnienia działają w tej przeglądarce.</small>
     </section>
 
     <section class="card">
-      <h2>Habit calendar</h2>
+      <h2>Kalendarz nawyków</h2>
       <div class="row">
-        <button id="cal-week">Week</button>
-        <button id="cal-month">Month</button>
+        <button id="cal-week">Tydzień</button>
+        <button id="cal-month">Miesiąc</button>
       </div>
       <div id="calendar" class="calendar"></div>
     </section>
 
     <section class="card">
-      <h2>Weekly goal</h2>
+      <h2>Cel tygodniowy</h2>
       <div class="row">
         <span id="weekly-progress">0/7</span>
-        <label class="inline">Goal:
+        <label class="inline">Cel:
           <input id="weekly-goal" type="number" min="1" max="7" value="5" />
         </label>
       </div>
@@ -58,69 +58,69 @@
     </section>
 
     <section class="card">
-      <h2>Focus (25/5)</h2>
+      <h2>Skupienie (25/5)</h2>
       <div class="focus">
         <div id="focus-time">25:00</div>
         <div class="row">
           <button id="focus-start">Start</button>
-          <button id="focus-pause">Pause</button>
+          <button id="focus-pause">Pauza</button>
           <button id="focus-reset">Reset</button>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <h2>Export</h2>
-      <button id="export-pdf">Export to PDF</button>
-      <small class="note">Opens a print view (PDF).</small>
+      <h2>Eksport</h2>
+      <button id="export-pdf">Eksportuj do PDF</button>
+      <small class="note">Otwiera widok do druku (PDF).</small>
     </section>
 
     <section class="card affiliate">
-      <h2>Featured products</h2>
+      <h2>Polecane produkty</h2>
       <ul class="affiliate-list">
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Flexomore</strong>
-              <p>Multi-ingredient supplement supporting joint and bone health.</p>
+              <p>Wieloskładnikowy suplement wspierający stawy i kości.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/s8ynht8n" target="_blank" rel="noopener">Learn more</a>
+            <a class="affiliate-link" href="https://nplink.net/s8ynht8n" target="_blank" rel="noopener">Dowiedz się więcej</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>EnduNAD</strong>
-              <p>Advanced supplement supporting natural NAD+ production and cellular health.</p>
+              <p>Zaawansowany suplement wspierający naturalną produkcję NAD+ i zdrowie komórkowe.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/msjj5khr" target="_blank" rel="noopener">Learn more</a>
+            <a class="affiliate-link" href="https://nplink.net/msjj5khr" target="_blank" rel="noopener">Dowiedz się więcej</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Brain Actives</strong>
-              <p>Modern brain support for increased mental and physical effort.</p>
+              <p>Nowoczesne wsparcie mózgu przy zwiększonym wysiłku umysłowym i fizycznym.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/6s68012h" target="_blank" rel="noopener">Learn more</a>
+            <a class="affiliate-link" href="https://nplink.net/6s68012h" target="_blank" rel="noopener">Dowiedz się więcej</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Femin Plus</strong>
-              <p>Product supporting libido and hormonal balance in women.</p>
+              <p>Produkt wspierający libido i równowagę hormonalną u kobiet.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/e1in365a" target="_blank" rel="noopener">Learn more</a>
+            <a class="affiliate-link" href="https://nplink.net/e1in365a" target="_blank" rel="noopener">Dowiedz się więcej</a>
           </div>
         </li>
         <li>
           <div class="affiliate-item">
             <div class="affiliate-text">
               <strong>Collagen Select</strong>
-              <p>VERISOL® collagen hydrolysate supplement supporting firm, elastic skin.</p>
+              <p>Suplement z hydrolizatem kolagenu VERISOL® wspierający jędrną, elastyczną skórę.</p>
             </div>
-            <a class="affiliate-link" href="https://nplink.net/z0yh7wts" target="_blank" rel="noopener">Learn more</a>
+            <a class="affiliate-link" href="https://nplink.net/z0yh7wts" target="_blank" rel="noopener">Dowiedz się więcej</a>
           </div>
         </li>
       </ul>
