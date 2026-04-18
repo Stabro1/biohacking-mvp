@@ -1,324 +1,166 @@
-const list = document.getElementById('habit-list');
-const addBtn = document.getElementById('add-habit');
+const factEl = document.getElementById('fact-text');
+const quizTextEl = document.getElementById('quiz-text');
+const quizFeedback = document.getElementById('quiz-feedback');
 const streakEl = document.getElementById('streak-count');
-const notifyBtn = document.getElementById('notify-btn');
-const notifyTime = document.getElementById('notify-time');
-const notifySet = document.getElementById('notify-set');
-const calWeekBtn = document.getElementById('cal-week');
-const calMonthBtn = document.getElementById('cal-month');
-const calendarEl = document.getElementById('calendar');
-const weeklyProgressEl = document.getElementById('weekly-progress');
-const weeklyGoalInput = document.getElementById('weekly-goal');
-const weeklyBar = document.getElementById('weekly-bar');
-const focusTimeEl = document.getElementById('focus-time');
-const focusStart = document.getElementById('focus-start');
-const focusPause = document.getElementById('focus-pause');
-const focusReset = document.getElementById('focus-reset');
+const favList = document.getElementById('favorites-list');
+const btnFavorite = document.getElementById('btn-favorite');
+const btnShare = document.getElementById('btn-share');
+const btnDone = document.getElementById('btn-done');
+const btnTrue = document.getElementById('quiz-true');
+const btnFalse = document.getElementById('quiz-false');
 const exportBtn = document.getElementById('export-pdf');
+const btnTop5 = document.getElementById('btn-top5');
+const btnQuiz = document.getElementById('btn-quiz');
 
 const todayKey = new Date().toISOString().slice(0,10);
-const state = JSON.parse(localStorage.getItem('bh_state') || '{}');
+const state = JSON.parse(localStorage.getItem('biohacks_state_pl') || '{}');
 
-const isPL = location.hostname.includes('biohacking-mvp');
-const i18n = {
-  en: {
-    tagline: 'Your daily habit checklist + streaks.',
-    streak: 'days in a row',
-    h2Today: 'Today’s habits',
-    addHabit: '+ Add habit',
-    h2Reminders: 'Reminders',
-    notifyBtn: 'Enable notifications',
-    notifySet: 'Set reminder',
-    noteReminder: 'Reminder works in this browser.',
-    h2Calendar: 'Habit calendar',
-    calWeek: 'Week',
-    calMonth: 'Month',
-    h2Weekly: 'Weekly goal',
-    weeklyLabel: 'Goal:',
-    h2Focus: 'Focus (25/5)',
-    focusPause: 'Pause',
-    h2Export: 'Export',
-    exportPdf: 'Export to PDF',
-    noteExport: 'Opens a print view (PDF).',
-    h2Featured: 'Featured products',
-    learnMore: 'Learn more',
-    products: {
-      flexomore: 'Multi-ingredient supplement supporting joint and bone health.',
-      endunad: 'Advanced supplement supporting natural NAD+ production and cellular health.',
-      brain: 'Modern brain support for increased mental and physical effort.',
-      femin: 'Product supporting libido and hormonal balance in women.',
-      collagen: 'VERISOL® collagen hydrolysate supplement supporting firm, elastic skin.'
-    },
-    habits: ['Daylight 10 min', 'Water + electrolytes', 'Movement 5–10 min'],
-    promptHabit: 'Habit name:',
-    notifUnsupported: 'Your browser does not support notifications.',
-    notifDenied: 'Notification permission not granted.',
-    notifTitle: 'Biohacking Daily',
-    notifBody: 'Time for your habits ✨',
-    alertReminder: (t)=>`Reminder set for ${t}`,
-    focusTitle: 'Biohacking Focus',
-    focusBreak: '5 min break',
-    focusStart: 'Start 25 min focus',
-    reportTitle: 'Biohacking Daily — report',
-    reportToday: (d)=>`Today’s habits (${d})`,
-    reportStreak: (n)=>`Streak: ${n} days`
-  },
-  pl: {
-    tagline: 'Twoja codzienna lista nawyków + serie.',
-    streak: 'dni z rzędu',
-    h2Today: 'Dzisiejsze nawyki',
-    addHabit: '+ Dodaj nawyk',
-    h2Reminders: 'Przypomnienia',
-    notifyBtn: 'Włącz powiadomienia',
-    notifySet: 'Ustaw przypomnienie',
-    noteReminder: 'Przypomnienia działają w tej przeglądarce.',
-    h2Calendar: 'Kalendarz nawyków',
-    calWeek: 'Tydzień',
-    calMonth: 'Miesiąc',
-    h2Weekly: 'Cel tygodniowy',
-    weeklyLabel: 'Cel:',
-    h2Focus: 'Skupienie (25/5)',
-    focusPause: 'Pauza',
-    h2Export: 'Eksport',
-    exportPdf: 'Eksportuj do PDF',
-    noteExport: 'Otwiera widok do druku (PDF).',
-    h2Featured: 'Polecane produkty',
-    learnMore: 'Dowiedz się więcej',
-    products: {
-      flexomore: 'Wieloskładnikowy suplement wspierający stawy i kości.',
-      endunad: 'Zaawansowany suplement wspierający naturalną produkcję NAD+ i zdrowie komórkowe.',
-      brain: 'Nowoczesne wsparcie mózgu przy zwiększonym wysiłku umysłowym i fizycznym.',
-      femin: 'Produkt wspierający libido i równowagę hormonalną u kobiet.',
-      collagen: 'Suplement z hydrolizatem kolagenu VERISOL® wspierający jędrną, elastyczną skórę.'
-    },
-    habits: ['Światło dzienne 10 min', 'Woda + elektrolity', 'Ruch 5–10 min'],
-    promptHabit: 'Nazwa nawyku:',
-    notifUnsupported: 'Twoja przeglądarka nie obsługuje powiadomień.',
-    notifDenied: 'Nie przyznano zgody na powiadomienia.',
-    notifTitle: 'Biohacking Daily',
-    notifBody: 'Czas na Twoje nawyki ✨',
-    alertReminder: (t)=>`Przypomnienie ustawione na ${t}`,
-    focusTitle: 'Biohacking Skupienie',
-    focusBreak: '5 min przerwy',
-    focusStart: 'Start 25 min skupienia',
-    reportTitle: 'Biohacking Daily — raport',
-    reportToday: (d)=>`Dzisiejsze nawyki (${d})`,
-    reportStreak: (n)=>`Seria: ${n} dni`
-  }
-};
+if (!state.completedDates) state.completedDates = {};
+if (!state.favorites) state.favorites = [];
+if (!state.lastCompletedDate) state.lastCompletedDate = null;
+if (!state.streak) state.streak = 0;
 
-const lang = isPL ? i18n.pl : i18n.en;
+const pool = [
+  { fact: 'Światło dzienne: 10 minut na zewnątrz w ciągu 1h od pobudki.', quiz: 'Poranne światło wspiera rytm dobowy.', answer: true },
+  { fact: 'Nawodnienie: woda + elektrolity do pierwszego napoju.', quiz: 'Elektrolity wspierają nawodnienie.', answer: true },
+  { fact: 'Ruch: 5–10 minut lekkiej aktywności.', quiz: 'Krótki ruch poprawia energię.', answer: true },
+  { fact: 'Śniadanie białkowe.', quiz: 'Białko pomaga w sytości i energii.', answer: true },
+  { fact: 'Bez kofeiny przez 60–90 min po przebudzeniu.', quiz: 'Opóźnienie kofeiny zmniejsza popołudniowy spadek.', answer: true },
+  { fact: 'Krótki spacer po posiłku (5–10 minut).', quiz: 'Spacer po posiłku wspiera kontrolę glukozy.', answer: true },
+  { fact: 'Przyciemnianie ekranów 60 min przed snem.', quiz: 'Mniej niebieskiego światła wspiera melatoninę.', answer: true },
+  { fact: 'Stałe pory snu (ta sama godzina).', quiz: 'Regularność poprawia jakość snu.', answer: true },
+  { fact: '5 minut oddychania przez nos / box breathing.', quiz: 'Kontrolowany oddech obniża stres.', answer: true },
+  { fact: 'Krótka ekspozycja na zimno (twarz).', quiz: 'Zimno zwiększa czujność.', answer: true },
+  { fact: 'Mikro‑trening: 1–2 serie pompek/przysiadów.', quiz: 'Krótki trening też działa.', answer: true },
+  { fact: 'Ogranicz dodany cukier dziś.', quiz: 'Mniej cukru wspiera metabolizm.', answer: true },
+  { fact: 'Białko + błonnik na lunch.', quiz: 'Białko i błonnik stabilizują energię.', answer: true },
+  { fact: '7–10k kroków (rozłożone w ciągu dnia).', quiz: 'Ruch w ciągu dnia ma znaczenie.', answer: true },
+  { fact: '10 minut światła popołudniu.', quiz: 'Popołudniowe światło wzmacnia sygnały dobowe.', answer: true },
+  { fact: '2‑minutowy reset postawy (barki w dół).', quiz: 'Postawa wpływa na oddech i fokus.', answer: true },
+  { fact: '5 minut mobilności.', quiz: 'Mobilność zmniejsza sztywność.', answer: true },
+  { fact: 'Ostatni posiłek 2–3h przed snem.', quiz: 'Wcześniejsza kolacja poprawia sen.', answer: true },
+  { fact: 'Produkty bogate w magnez (zielone, orzechy).', quiz: 'Magnez wspiera relaks.', answer: true },
+  { fact: 'Ogranicz alkohol dziś.', quiz: 'Alkohol pogarsza jakość snu.', answer: true },
+  { fact: 'Jeden 25‑minutowy blok głębokiej pracy.', quiz: 'Krótki deep work buduje momentum.', answer: true },
+  { fact: '5 minut wdzięczności / journalingu.', quiz: 'Journaling obniża stres.', answer: true },
+  { fact: 'Rozciąganie łydek/bioder przez 3 min.', quiz: 'Rozciąganie poprawia mobilność.', answer: true },
+  { fact: 'Stań lub przejdź się podczas jednej rozmowy.', quiz: 'Stanie przerywa siedzenie.', answer: true },
+  { fact: 'Nawodnienie: 2 litry do wieczora.', quiz: 'Nawodnienie wspiera energię.', answer: true },
+  { fact: 'Bez telefonu przez 15 min po przebudzeniu.', quiz: 'Brak telefonu rano poprawia fokus.', answer: true },
+  { fact: 'Kofeina max 8h przed snem.', quiz: 'Późna kofeina psuje sen.', answer: true },
+  { fact: 'Dodaj omega‑3 dziś.', quiz: 'Omega‑3 wspiera mózg.', answer: true },
+  { fact: '10 minut rozciągania przed snem.', quiz: 'Rozciąganie pomaga w relaksie.', answer: true },
+  { fact: 'Krótki oddech po lunchu.', quiz: 'Oddech resetuje uwagę.', answer: true }
+];
 
-function applyLocale(){
-  document.documentElement.lang = isPL ? 'pl' : 'en';
-  document.getElementById('tagline').textContent = lang.tagline;
-  document.getElementById('streak-label').textContent = lang.streak;
-  document.getElementById('h2-today').textContent = lang.h2Today;
-  document.getElementById('add-habit').textContent = lang.addHabit;
-  document.getElementById('h2-reminders').textContent = lang.h2Reminders;
-  document.getElementById('notify-btn').textContent = lang.notifyBtn;
-  document.getElementById('notify-set').textContent = lang.notifySet;
-  document.getElementById('note-reminder').textContent = lang.noteReminder;
-  document.getElementById('h2-calendar').textContent = lang.h2Calendar;
-  document.getElementById('cal-week').textContent = lang.calWeek;
-  document.getElementById('cal-month').textContent = lang.calMonth;
-  document.getElementById('h2-weekly').textContent = lang.h2Weekly;
-  document.getElementById('weekly-label').childNodes[0].nodeValue = lang.weeklyLabel;
-  document.getElementById('h2-focus').textContent = lang.h2Focus;
-  document.getElementById('focus-pause').textContent = lang.focusPause;
-  document.getElementById('h2-export').textContent = lang.h2Export;
-  document.getElementById('export-pdf').textContent = lang.exportPdf;
-  document.getElementById('note-export').textContent = lang.noteExport;
-  document.getElementById('h2-featured').textContent = lang.h2Featured;
-  document.querySelectorAll('.affiliate-link').forEach(a=>a.textContent = lang.learnMore);
-  const descs = document.querySelectorAll('.affiliate-text p');
-  if (descs[0]) descs[0].textContent = lang.products.flexomore;
-  if (descs[1]) descs[1].textContent = lang.products.endunad;
-  if (descs[2]) descs[2].textContent = lang.products.brain;
-  if (descs[3]) descs[3].textContent = lang.products.femin;
-  if (descs[4]) descs[4].textContent = lang.products.collagen;
+function hashDate(str){
+  let h = 0;
+  for (let i=0;i<str.length;i++) h = (h*31 + str.charCodeAt(i)) >>> 0;
+  return h;
 }
 
-function migrateHabits(){
-  if (!state.habits) return;
-  const mapTo = isPL ? {
-    'Daylight 10 min': 'Światło dzienne 10 min',
-    'Water + electrolytes': 'Woda + elektrolity',
-    'Movement 5–10 min': 'Ruch 5–10 min',
-  } : {
-    'Światło dzienne 10 min': 'Daylight 10 min',
-    'Woda + elektrolity': 'Water + electrolytes',
-    'Ruch 5–10 min': 'Movement 5–10 min',
-  };
-  state.habits = state.habits.map(h => ({ ...h, name: mapTo[h.name] || h.name }));
-}
+const idx = hashDate(todayKey) % pool.length;
+const today = pool[idx];
 
-if (!state.habits) state.habits = lang.habits.map(name => ({ id: crypto.randomUUID(), name, done: false }));
-if (!state.history) state.history = {};
-if (!state.weeklyGoal) state.weeklyGoal = 5;
+factEl.textContent = today.fact;
+quizTextEl.textContent = today.quiz;
 
-applyLocale();
-migrateHabits();
-
-if (state.lastDate !== todayKey) {
-  state.habits = state.habits.map(h => ({...h, done:false}));
-  state.lastDate = todayKey;
-}
-
-function save(){ localStorage.setItem('bh_state', JSON.stringify(state)); }
-
-function render(){
-  list.innerHTML='';
-  state.habits.forEach(h => {
-    const li = document.createElement('li');
-    const cb = document.createElement('input');
-    cb.type='checkbox';
-    cb.checked = h.done;
-    cb.addEventListener('change',()=>{
-      h.done = cb.checked; save(); updateStreak(); renderCalendar('week'); updateWeekly();
-    });
-    const span = document.createElement('span');
-    span.textContent = h.name;
-    li.append(cb, span);
-    list.append(li);
-  });
-  weeklyGoalInput.value = state.weeklyGoal || 5;
-  updateStreak();
-  renderCalendar('week');
-  updateWeekly();
-}
+function save(){ localStorage.setItem('biohacks_state_pl', JSON.stringify(state)); }
 
 function updateStreak(){
-  const allDone = state.habits.every(h=>h.done);
-  if (allDone && state.streakDate !== todayKey){
+  if (streakEl) streakEl.textContent = state.streak || 0;
+  if (streakElBottom) streakElBottom.textContent = state.streak || 0;
+}
+
+function markDone(){
+  if (state.completedDates[todayKey]) return;
+  const last = state.lastCompletedDate ? new Date(state.lastCompletedDate) : null;
+  const todayDate = new Date(todayKey);
+  const yesterday = new Date(todayDate);
+  yesterday.setDate(todayDate.getDate()-1);
+  if (last && last.toISOString().slice(0,10) === yesterday.toISOString().slice(0,10)){
     state.streak = (state.streak||0) + 1;
-    state.streakDate = todayKey;
+  } else {
+    state.streak = 1;
   }
-  // history per day
-  state.history[todayKey] = {
-    done: state.habits.filter(h=>h.done).length,
-    total: state.habits.length
-  };
+  state.lastCompletedDate = todayKey;
+  state.completedDates[todayKey] = true;
   save();
-  streakEl.textContent = state.streak || 0;
+  updateStreak();
 }
 
-addBtn.addEventListener('click', ()=>{
-  const name = prompt(lang.promptHabit);
-  if (!name) return;
-  state.habits.push({ id: crypto.randomUUID(), name, done:false });
-  save(); render();
-});
-
-// Reminders
-notifyBtn?.addEventListener('click', async () => {
-  if (!('Notification' in window)) return alert(lang.notifUnsupported);
-  const perm = await Notification.requestPermission();
-  if (perm !== 'granted') alert(lang.notifDenied);
-});
-
-notifySet?.addEventListener('click', () => {
-  const time = notifyTime.value || '20:00';
-  const [h,m] = time.split(':').map(Number);
-  const now = new Date();
-  const target = new Date();
-  target.setHours(h, m, 0, 0);
-  if (target <= now) target.setDate(target.getDate()+1);
-  const delay = target - now;
-  setTimeout(()=>{
-    if (Notification.permission === 'granted'){
-      new Notification(lang.notifTitle, { body: lang.notifBody });
-    }
-  }, delay);
-  alert(lang.alertReminder(time));
-});
-
-// Calendar
-function renderCalendar(mode='week'){
-  calendarEl.innerHTML='';
-  const days = mode === 'month' ? 30 : 7;
-  for (let i=days-1;i>=0;i--){
-    const d = new Date();
-    d.setDate(d.getDate()-i);
-    const key = d.toISOString().slice(0,10);
-    const info = state.history[key];
-    const el = document.createElement('div');
-    el.className = 'day' + (info && info.done === info.total ? ' done' : '');
-    el.innerHTML = `<div>${d.getDate()}</div><div>${info?info.done:0}/${info?info.total:0}</div>`;
-    calendarEl.appendChild(el);
+function renderFavorites(){
+  favList.innerHTML = '';
+  if (!state.favorites.length){
+    const li = document.createElement('li');
+    li.textContent = 'Brak ulubionych.';
+    favList.appendChild(li);
+    return;
   }
+  state.favorites.forEach(f => {
+    const li = document.createElement('li');
+    li.textContent = f;
+    favList.appendChild(li);
+  });
 }
-calWeekBtn?.addEventListener('click', ()=>renderCalendar('week'));
-calMonthBtn?.addEventListener('click', ()=>renderCalendar('month'));
 
-// Weekly goal
-function updateWeekly(){
-  const goal = Number(weeklyGoalInput.value || state.weeklyGoal || 5);
-  state.weeklyGoal = goal;
-  const days = 7;
-  let hit = 0;
-  for (let i=0;i<days;i++){
-    const d = new Date();
-    d.setDate(d.getDate()-i);
-    const key = d.toISOString().slice(0,10);
-    const info = state.history[key];
-    if (info && info.total>0 && info.done === info.total) hit++;
+btnFavorite.addEventListener('click', ()=>{
+  if (!state.favorites.includes(today.fact)) state.favorites.unshift(today.fact);
+  state.favorites = state.favorites.slice(0,50);
+  save(); renderFavorites();
+});
+
+btnShare.addEventListener('click', async ()=>{
+  const url = location.href;
+  try {
+    await navigator.clipboard.writeText(url);
+    alert('Link skopiowany!');
+  } catch (e){
+    prompt('Skopiuj link:', url);
   }
-  weeklyProgressEl.textContent = `${hit}/${goal}`;
-  weeklyBar.style.width = `${Math.min(100, (hit/goal)*100)}%`;
-  save();
-}
-weeklyGoalInput?.addEventListener('change', updateWeekly);
+});
 
-// Focus timer 25/5
-let focusSeconds = 25*60;
-let focusInterval = null;
-let onBreak = false;
+btnDone.addEventListener('click', markDone);
 
-function renderFocus(){
-  const m = String(Math.floor(focusSeconds/60)).padStart(2,'0');
-  const s = String(focusSeconds%60).padStart(2,'0');
-  focusTimeEl.textContent = `${m}:${s}`;
+function answer(userAnswer){
+  const ok = userAnswer === today.answer;
+  quizFeedback.textContent = ok ? '✅ Dobrze!' : '❌ Spróbuj jutro.';
 }
 
-function tick(){
-  focusSeconds--;
-  if (focusSeconds <= 0){
-    onBreak = !onBreak;
-    focusSeconds = (onBreak ? 5 : 25) * 60;
-    if (Notification.permission === 'granted'){
-      new Notification(lang.focusTitle, { body: onBreak ? lang.focusBreak : lang.focusStart });
-    }
-  }
-  renderFocus();
+btnTrue.addEventListener('click', ()=>answer(true));
+btnFalse.addEventListener('click', ()=>answer(false));
+if (btnQuiz){
+  btnQuiz.addEventListener('click', ()=>{
+    document.getElementById('quiz-text').scrollIntoView({behavior:'smooth', block:'center'});
+  });
 }
 
-focusStart?.addEventListener('click', ()=>{
-  if (focusInterval) return;
-  focusInterval = setInterval(tick, 1000);
-});
-focusPause?.addEventListener('click', ()=>{
-  clearInterval(focusInterval); focusInterval = null;
-});
-focusReset?.addEventListener('click', ()=>{
-  clearInterval(focusInterval); focusInterval = null;
-  onBreak = false; focusSeconds = 25*60; renderFocus();
-});
-renderFocus();
-
-// Export to PDF (print)
-exportBtn?.addEventListener('click', ()=>{
+exportBtn.addEventListener('click', ()=>{
   const w = window.open('', '_blank');
-  const listHtml = state.habits.map(h=>`<li>${h.done?'✅':'⬜'} ${h.name}</li>`).join('');
-  w.document.write(`<!doctype html><html><head><title>Biohacking Daily</title></head><body>
-  <h1>${lang.reportTitle}</h1>
-  <h2>${lang.reportToday(todayKey)}</h2>
-  <ul>${listHtml}</ul>
-  <p>${lang.reportStreak(state.streak||0)}</p>
+  const favs = state.favorites.map(f=>`<li>${f}</li>`).join('');
+  w.document.write(`<!doctype html><html><head><title>Biohacks Daily — raport</title></head><body>
+  <h1>Biohacks Daily — raport</h1>
+  <h2>Dzisiejszy nawyk (${todayKey})</h2>
+  <p>${today.fact}</p>
+  <h3>Dzisiejsze pytanie</h3>
+  <p>${today.quiz}</p>
+  <p>Odpowiedź: ${today.answer ? 'Prawda' : 'Fałsz'}</p>
+  <h3>Ulubione</h3>
+  <ul>${favs || '<li>Brak</li>'}</ul>
   </body></html>`);
   w.document.close();
   w.focus();
   w.print();
 });
 
-render();
+if (btnTop5){
+  btnTop5.addEventListener('click', ()=>{
+    document.getElementById('top5').scrollIntoView({behavior:'smooth'});
+  });
+}
+
+// tracking moved to dlugowieczny24.pl
+
+
+renderFavorites();
+updateStreak();
